@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopBondhu — অনলাইন শপ</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2e;--panel2:#18233b;--text:#f5f7ff;--muted:#aab5cc;--accent:#7c5cff;--accent2:#24d6a5;--line:#293550}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;background:linear-gradient(160deg,#0b1020,#10182b 60%,#101027);color:var(--text)}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0}
+header{position:sticky;top:0;z-index:5;background:#0b1020eF;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{max-width:1100px;margin:auto;padding:14px 18px;display:flex;align-items:center;gap:14px}
+.logo{font-weight:900;font-size:21px;letter-spacing:-.5px;white-space:nowrap}.logo span{color:var(--accent2)}
+.search{flex:1;min-width:0}.search input{width:100%;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:13px;padding:11px 13px;outline:none}
+.cart-btn,.primary{background:var(--accent);color:white;border-radius:12px;padding:11px 14px;font-weight:750}
+main{max-width:1100px;margin:auto;padding:20px 18px 60px}
+.hero{background:radial-gradient(circle at 85% 10%,#5845a7 0,transparent 32%),linear-gradient(125deg,#1d2b4a,#17182e);border:1px solid #34405e;border-radius:24px;padding:28px 24px;display:grid;grid-template-columns:1.4fr .8fr;gap:20px;align-items:center;overflow:hidden}
+.eyebrow{color:var(--accent2);font-weight:800;font-size:13px;letter-spacing:1px}.hero h1{font-size:clamp(28px,5vw,46px);line-height:1.15;margin:9px 0 12px}.hero p{color:var(--muted);max-width:500px;margin:0 0 18px}.hero-art{font-size:100px;text-align:center;filter:drop-shadow(0 15px 22px #0007)}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 0 15px}.section-head h2{margin:0;font-size:23px}.section-head p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}.filter{background:var(--panel);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 13px}.filter.active{background:#30265d;color:#fff;border-color:#7c5cff}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.product{background:linear-gradient(180deg,#151f35,#10182a);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0}.product-art{height:150px;display:grid;place-items:center;font-size:65px;background:linear-gradient(135deg,#1d2c4c,#252047)}.product-body{padding:14px;display:flex;flex-direction:column;flex:1}.tag{font-size:11px;color:var(--accent2);font-weight:800}.product h3{margin:6px 0;font-size:17px}.desc{color:var(--muted);font-size:13px;min-height:38px}.price-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}.price{font-weight:850;font-size:18px}.add{background:#26345a;color:#fff;border:1px solid #3a4b75;border-radius:10px;padding:9px 11px;font-weight:750}.add:hover{background:var(--accent)}
+.info-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}.info{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.info b{display:block;margin:5px 0}.info span{font-size:13px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:24px 18px;text-align:center;color:var(--muted);font-size:13px}
+.modal-backdrop{display:none;position:fixed;inset:0;background:#0009;z-index:10;padding:18px;align-items:center;justify-content:center}.modal-backdrop.show{display:flex}.modal{background:#121a2e;border:1px solid var(--line);border-radius:20px;padding:20px;width:min(520px,100%);max-height:90vh;overflow:auto}.modal-top{display:flex;justify-content:space-between;align-items:center}.modal h2{margin:0 0 12px}.close{background:transparent;color:white;font-size:25px}.cart-line{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.cart-line small{display:block;color:var(--muted)}.qty{display:flex;align-items:center;gap:8px}.qty button{background:var(--panel2);color:white;border-radius:8px;width:28px;height:28px}.total{display:flex;justify-content:space-between;font-size:18px;font-weight:850;padding:16px 0}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}input,textarea,select{width:100%;padding:11px 12px;background:#0c1324;border:1px solid var(--line);border-radius:10px;color:white;outline:none}textarea{resize:vertical}.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}.empty{text-align:center;color:var(--muted);padding:22px 0}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#202d48;border:1px solid #42557e;padding:11px 16px;border-radius:12px;display:none;z-index:20}.toast.show{display:block}
+@media(max-width:700px){.nav{gap:9px;padding:12px}.logo{font-size:18px}.hero{grid-template-columns:1fr;padding:22px}.hero-art{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-art{height:120px;font-size:53px}.product-body{padding:11px}.product h3{font-size:15px}.desc{font-size:12px}.price-row{align-items:flex-start;flex-direction:column}.add{width:100%}.info-row{grid-template-columns:1fr}.cart-btn{padding:10px}.section-head h2{font-size:21px}}
+@media(max-width:370px){.grid{grid-template-columns:1fr}.search input{padding:10px 8px}}
+</style>
+</head>
+<body>
+<header><div class="nav">
+  <div class="logo">Shop<span>Bondhu</span></div>
+  <div class="search"><input id="search" placeholder="পণ্য খুঁজুন..." aria-label="পণ্য খুঁজুন"></div>
+  <button class="cart-btn" id="openCart">🛒 <span id="cartCount">০</span></button>
+</div></header>
+<main>
+  <section class="hero">
+    <div><div class="eyebrow">আপনার অনলাইন শপ</div><h1>পছন্দের পণ্য,<br>সহজেই অর্ডার করুন।</h1><p>বিশ্বস্ত কেনাকাটার সহজ ঠিকানা। পণ্য বেছে নিন, কার্টে যোগ করুন, অর্ডারের তথ্য পাঠান।</p><button class="primary" onclick="document.getElementById('productsTitle').scrollIntoView({behavior:'smooth'})">পণ্য দেখুন ↓</button></div>
+    <div class="hero-art" aria-hidden="true">🛍️</div>
+  </section>
+  <div class="section-head"><div><h2 id="productsTitle">জনপ্রিয় পণ্য</h2><p>ডেমো পণ্য — নিজের পণ্যের তথ্য দিয়ে বদলে নিন</p></div></div>
+  <div class="filters" id="filters">
+    <button class="filter active" data-cat="সব">সব পণ্য</button><button class="filter" data-cat="প্যাকেজ">প্যাকেজ</button><button class="filter" data-cat="গ্যাজেট">গ্যাজেট</button><button class="filter" data-cat="ফ্যাশন">ফ্যাশন</button><button class="filter" data-cat="লাইফস্টাইল">লাইফস্টাইল</button>
+  </div>
+  <section class="grid" id="productGrid"></section>
+  <section class="info-row">
+    <div class="info">🚚<b>সহজ ডেলিভারি</b><span>অর্ডার নিশ্চিত করার পর ডেলিভারি ব্যবস্থা ঠিক করুন।</span></div>
+    <div class="info">🔒<b>নিরাপদ অর্ডার</b><span>কাস্টমারের তথ্য শুধু অর্ডার পরিচালনার কাজে ব্যবহার করুন।</span></div>
+    <div class="info">💬<b>কাস্টমার সাপোর্ট</b><span>যোগাযোগের তথ্য আপনার ব্যবসা অনুযায়ী যোগ করুন।</span></div>
+  </section>
+</main>
+<footer>© 2026 ShopBondhu · ডেমো স্টোর · Telegram bot backend আলাদাভাবে চালাতে হবে</footer>
+
+<div class="modal-backdrop" id="cartModal"><div class="modal">
+  <div class="modal-top"><h2>🛒 আপনার কার্ট</h2><button class="close" data-close="cartModal">×</button></div>
+  <div id="cartItems"></div><div class="total"><span>মোট</span><span id="cartTotal">৳০</span></div>
+  <h3>অর্ডারের তথ্য</h3>
+  <form id="orderForm">
+    <label for="customerName">আপনার নাম</label><input id="customerName" required placeholder="নাম লিখুন">
+    <label for="phone">মোবাইল নম্বর</label><input id="phone" required inputmode="tel" placeholder="01XXXXXXXXX" pattern="[0-9+ -]{8,16}">
+    <label for="address">ডেলিভারি ঠিকানা / নোট</label><textarea id="address" rows="2" required placeholder="ঠিকানা লিখুন"></textarea>
+    <label for="payment">পেমেন্ট পদ্ধতি</label><select id="payment"><option>ক্যাশ অন ডেলিভারি (ডেমো)</option><option>বিকাশ (ম্যানুয়াল যাচাই প্রয়োজন)</option><option>নগদ (ম্যানুয়াল যাচাই প্রয়োজন)</option></select>
+    <button class="primary" style="width:100%;margin-top:14px" type="submit">অর্ডার তৈরি করুন</button>
+    <p class="notice">এটি সামনের দিকের ডেমো। অর্ডার সার্ভারে সংরক্ষণ হয় না এবং কোনো পেমেন্ট নেওয়া হয় না। চালু করার আগে নিরাপদ backend, admin notification ও payment verification যোগ করতে হবে।</p>
+  </form>
+</div></div>
+<div class="modal-backdrop" id="orderModal"><div class="modal"><div class="modal-top"><h2>✅ অর্ডার সারাংশ</h2><button class="close" data-close="orderModal">×</button></div><div id="orderSummary"></div><button class="primary" id="copyOrder" style="width:100%;margin-top:12px">অর্ডারের তথ্য কপি করুন</button><p class="notice">এই ডেমোতে অর্ডারটি আপনার ডিভাইসেই দেখানো হয়েছে। কপি করে অ্যাডমিনকে পাঠাতে পারেন।</p></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const products=[
+ {id:1,name:"Premium Package",cat:"প্যাকেজ",price:100,emoji:"💎",desc:"আপনার Telegram bot-এর Premium Package।"},
+ {id:2,name:"Special Package",cat:"প্যাকেজ",price:200,emoji:"🎁",desc:"আপনার Telegram bot-এর Special Package।"},
+ {id:3,name:"ওয়্যারলেস ইয়ারবাড",cat:"গ্যাজেট",price:650,emoji:"🎧",desc:"প্রতিদিনের ব্যবহারের জন্য হালকা ও সুবিধাজনক।"},
+ {id:4,name:"স্মার্ট ঘড়ি",cat:"গ্যাজেট",price:990,emoji:"⌚",desc:"সাধারণ ডিজাইন, দৈনন্দিন স্টাইলের জন্য।"},
+ {id:5,name:"ক্যাজুয়াল ব্যাকপ্যাক",cat:"ফ্যাশন",price:780,emoji:"🎒",desc:"পড়াশোনা ও ভ্রমণের জন্য উপযোগী।"},
+ {id:6,name:"ক্লাসিক সানগ্লাস",cat:"ফ্যাশন",price:350,emoji:"🕶️",desc:"সিম্পল লুকের একটি ফ্যাশন অ্যাকসেসরি।"},
+ {id:7,name:"ডেস্ক ল্যাম্প",cat:"লাইফস্টাইল",price:520,emoji:"💡",desc:"পড়ার টেবিলের জন্য সুন্দর আলো।"},
+ {id:8,name:"ট্রাভেল মগ",cat:"লাইফস্টাইল",price:290,emoji:"☕",desc:"চা বা কফির জন্য ব্যবহারিক মগ।"}
+];
+let cart={};let category="সব";let lastOrder="";
+const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]);
+function money(n){return "৳"+bn(n.toLocaleString("en-US"))}
+function renderProducts(){const q=document.getElementById("search").value.trim().toLowerCase();const list=products.filter(p=>(category==="সব"||p.cat===category)&&(p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)));document.getElementById("productGrid").innerHTML=list.map(p=>`<article class="product"><div class="product-art">${p.emoji}</div><div class="product-body"><span class="tag">${p.cat}</span><h3>${p.name}</h3><div class="desc">${p.desc}</div><div class="price-row"><span class="price">${money(p.price)}</span><button class="add" onclick="addToCart(${p.id})">＋ কার্টে যোগ</button></div></div></article>`).join("")||'<div class="empty">কোনো পণ্য পাওয়া যায়নি।</div>'}
+function addToCart(id){cart[id]=(cart[id]||0)+1;renderCart();showToast("পণ্য কার্টে যোগ হয়েছে");}
+function renderCart(){let count=Object.values(cart).reduce((a,b)=>a+b,0);document.getElementById("cartCount").textContent=bn(count);let entries=products.filter(p=>cart[p.id]);document.getElementById("cartItems").innerHTML=entries.length?entries.map(p=>`<div class="cart-line"><div><b>${p.emoji} ${p.name}</b><small>${money(p.price)} × ${bn(cart[p.id])}</small></div><div class="qty"><button onclick="changeQty(${p.id},-1)">−</button><span>${bn(cart[p.id])}</span><button onclick="changeQty(${p.id},1)">+</button></div></div>`).join(""):'<div class="empty">কার্ট খালি। আগে পণ্য যোগ করুন।</div>';document.getElementById("cartTotal").textContent=money(entries.reduce((s,p)=>s+p.price*cart[p.id],0))}
+function changeQty(id,d){cart[id]=(cart[id]||0)+d;if(cart[id]<=0)delete cart[id];renderCart()}
+function openModal(id){document.getElementById(id).classList.add("show")}function closeModal(id){document.getElementById(id).classList.remove("show")}
+function showToast(t){let el=document.getElementById("toast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800)}
+document.getElementById("search").addEventListener("input",renderProducts);
+document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{category=b.dataset.cat;document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));renderProducts()}));
+document.getElementById("openCart").addEventListener("click",()=>{renderCart();openModal("cartModal")});
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
+document.querySelectorAll(".modal-backdrop").forEach(b=>b.addEventListener("click",e=>{if(e.target===b)b.classList.remove("show")}));
+document.getElementById("orderForm").addEventListener("submit",e=>{e.preventDefault();const items=products.filter(p=>cart[p.id]);if(!items.length){showToast("আগে কার্টে পণ্য যোগ করুন");return}const total=items.reduce((s,p)=>s+p.price*cart[p.id],0);lastOrder=`🛍️ নতুন অর্ডার (ডেমো)\\nনাম: ${document.getElementById("customerName").value}\\nমোবাইল: ${document.getElementById("phone").value}\\nঠিকানা: ${document.getElementById("address").value}\\nপেমেন্ট: ${document.getElementById("payment").value}\\n\\nপণ্য:\\n${items.map(p=>`• ${p.name} × ${cart[p.id]} = ${money(p.price*cart[p.id])}`).join("\\n")}\\n\\nমোট: ${money(total)}`;document.getElementById("orderSummary").innerHTML=`<pre style="white-space:pre-wrap;font-family:inherit;line-height:1.7">${lastOrder.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</pre>`;closeModal("cartModal");openModal("orderModal")});
+document.getElementById("copyOrder").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(lastOrder);showToast("অর্ডারের তথ্য কপি হয়েছে")}catch(e){showToast("কপি করা যায়নি; অর্ডার সারাংশ দেখে হাতে কপি করুন")}});
+renderProducts();renderCart();
+</script>
+</body></html>

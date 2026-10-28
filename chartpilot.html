@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d18">
+  <title>ChartPilot — Forex Analyzer</title>
+  <style>
+    :root { color-scheme: dark; --bg:#080d18; --panel:#111a2a; --line:#26344a; --text:#eef4ff; --muted:#9eacc3; --gold:#f3c969; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(ellipse at top,#14213a 0,#080d18 58%); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,sans-serif; min-height:100vh; }
+    .wrap { width:min(100% - 28px,520px); margin:0 auto; padding:24px 0 36px; }
+    header { display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+    .logo { width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#f5d77c,#a66b19);color:#111827;font-size:23px;font-weight:900;box-shadow:0 8px 26px #d39a3833; }
+    h1 { margin:0;font-size:24px;letter-spacing:.2px; }
+    .sub { color:var(--muted);font-size:13px;margin-top:3px; }
+    .panel { background:#111a2aeF;border:1px solid var(--line);border-radius:20px;padding:18px;margin:14px 0;box-shadow:0 14px 40px #0002; }
+    .section-title { margin:0 0 14px;font-size:16px; }
+    .tags { display:flex;gap:9px;flex-wrap:wrap; }
+    .tag { border:1px solid #34435c;background:#172338;border-radius:12px;padding:10px 13px;font-size:13px; }
+    .tag strong { color:var(--gold); }
+    label { display:block;font-size:14px;font-weight:650;margin-bottom:10px; }
+    input[type=file] { width:100%;padding:12px;background:#0b1220;border:1px dashed #455774;border-radius:13px;color:var(--muted);font-size:13px; }
+    .hint { font-size:12px;color:var(--muted);line-height:1.55;margin:10px 0 0; }
+    .preview { display:none;width:100%;max-height:360px;object-fit:contain;background:#070b12;border:1px solid var(--line);border-radius:14px;margin-top:14px; }
+    .result { border-radius:16px;padding:17px;text-align:center;background:#0b1220;border:1px solid var(--line); }
+    .result-label { font-size:12px;color:var(--muted);letter-spacing:1px; }
+    .result-value { font-size:27px;font-weight:850;margin:7px 0 2px; }
+    .result-note { color:var(--muted);font-size:12px;line-height:1.5; }
+    button { border:0;border-radius:13px;padding:14px 16px;width:100%;font-size:15px;font-weight:800;cursor:pointer; }
+    .primary { margin-top:14px;color:#141923;background:linear-gradient(135deg,#f7dc8b,#dfa83f); }
+    .secondary { margin-top:9px;color:var(--text);background:#1a263a;border:1px solid var(--line); }
+    .warning { font-size:12px;line-height:1.6;color:#c5d0e2;margin:14px 2px 0; }
+    footer { text-align:center;color:#75839b;font-size:11px;margin-top:20px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="logo">CP</div>
+      <div><h1>ChartPilot</h1><div class="sub">Forex Chart Screenshot Analyzer</div></div>
+    </header>
+
+    <section class="panel">
+      <h2 class="section-title">চার্ট সেটিংস</h2>
+      <div class="tags">
+        <div class="tag">মার্কেট: <strong>Forex</strong></div>
+        <div class="tag">টাইমফ্রেম: <strong>১ মিনিট</strong></div>
+        <div class="tag">ইনপুট: <strong>Screenshot</strong></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">চার্টের স্ক্রিনশট</h2>
+      <label for="chartFile">Choose File — ছবি নির্বাচন করো</label>
+      <input id="chartFile" type="file" accept="image/*">
+      <img id="preview" class="preview" alt="নির্বাচিত চার্টের প্রিভিউ">
+      <p id="fileInfo" class="hint">PNG, JPG বা WebP ছবি নির্বাচন করো। ছবিটি এই পেজেই প্রিভিউ হবে।</p>
+      <button id="analyzeBtn" class="primary" type="button">চার্ট যাচাই করো</button>
+      <button id="clearBtn" class="secondary" type="button">ছবি সরাও</button>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">বিশ্লেষণের ফলাফল</h2>
+      <div class="result" aria-live="polite">
+        <div class="result-label">বর্তমান ফলাফল</div>
+        <div id="resultValue" class="result-value">সিগনাল নাই</div>
+        <div id="resultNote" class="result-note">এখনো কোনো চার্ট যাচাই করা হয়নি।</div>
+      </div>
+      <p class="warning">নোট: এই HTML ফাইল শুধু ছবি দেখায়; এটি নিজে থেকে বাজারের ডেটা বা AI বিশ্লেষণ চালায় না। প্রকৃত বিশ্লেষণের নিরাপদ ব্যাকএন্ড/মডেল সংযুক্ত না থাকলে ফলাফল “সিগনাল নাই” থাকবে। কোনো স্বয়ংক্রিয় ট্রেডিং নেই।</p>
+    </section>
+    <footer>ChartPilot Demo • কোনো ট্রেড স্বয়ংক্রিয়ভাবে চালানো হয় না</footer>
+  </main>
+  <script>
+    const fileInput = document.getElementById('chartFile');
+    const preview = document.getElementById('preview');
+    const fileInfo = document.getElementById('fileInfo');
+    const resultValue = document.getElementById('resultValue');
+    const resultNote = document.getElementById('resultNote');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    let previewUrl = null;
+
+    function setNoSignal(note) {
+      resultValue.textContent = 'সিগনাল নাই';
+      resultValue.style.color = '#f3c969';
+      resultNote.textContent = note;
+    }
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      previewUrl = null;
+      if (!file) {
+        preview.style.display = 'none';
+        preview.removeAttribute('src');
+        fileInfo.textContent = 'PNG, JPG বা WebP ছবি নির্বাচন করো। ছবিটি এই পেজেই প্রিভিউ হবে।';
+        setNoSignal('কোনো ছবি নির্বাচন করা হয়নি।');
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        fileInput.value = '';
+        preview.style.display = 'none';
+        setNoSignal('এটি ছবি নয়। একটি চার্টের ছবি নির্বাচন করো।');
+        return;
+      }
+      previewUrl = URL.createObjectURL(file);
+      preview.src = previewUrl;
+      preview.style.display = 'block';
+      fileInfo.textContent = `${file.name} • ${(file.size / 1024).toFixed(0)} KB`;
+      setNoSignal('ছবি লোড হয়েছে, কিন্তু প্রকৃত বিশ্লেষণ মডেল সংযুক্ত নেই।');
+    });
+
+    analyzeBtn.addEventListener('click', () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        setNoSignal('আগে Choose File চাপ দিয়ে একটি চার্টের ছবি নির্বাচন করো।');
+        return;
+      }
+      setNoSignal('প্রকৃত বাজার-ডেটা/AI বিশ্লেষণ সংযুক্ত নেই, তাই অনুমান করে UP বা DOWN দেখানো হবে না।');
+    });
+
+    clearBtn.addEventListener('click', () => {
+      fileInput.value = '';
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      previewUrl = null;
+      preview.removeAttribute('src');
+      preview.style.display = 'none';
+      fileInfo.textContent = 'PNG, JPG বা WebP ছবি নির্বাচন করো। ছবিটি এই পেজেই প্রিভিউ হবে।';
+      setNoSignal('ছবি সরানো হয়েছে।');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Telegram Bot Dashboard</title>
+<style>
+:root{--bg:#080b12;--panel:#121827;--panel2:#182235;--line:#29344a;--text:#f2f5fb;--muted:#9aa8bd;--accent:#31c48d;--blue:#3997ff;--danger:#ff6978}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif}
+header{position:sticky;top:0;z-index:5;background:#0d1320ed;border-bottom:1px solid var(--line);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:800;font-size:18px}.brand span{color:var(--accent)}.status{font-size:12px;color:var(--muted)}
+main{max-width:900px;margin:auto;padding:16px}.hero{padding:20px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,#17243a,#101621);margin-bottom:16px}
+h1{font-size:24px;margin:0 0 8px}p{line-height:1.6}.muted{color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:16px;min-width:0}
+.card h3{margin:8px 0 4px;font-size:16px}.emoji{font-size:26px}.card p{margin:0;color:var(--muted);font-size:13px}
+button,.button{border:0;border-radius:11px;padding:11px 14px;background:var(--accent);color:#06130e;font-weight:750;cursor:pointer;font-size:14px}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.blue{background:var(--blue);color:#06101c}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 0}nav button{white-space:nowrap}
+section{margin-top:18px}section h2{font-size:18px;margin:0 0 12px}
+.panel{background:var(--panel);border:1px solid var(--line);padding:16px;border-radius:16px;margin-bottom:12px}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0b111d;color:var(--text);font:inherit}
+input[type=file]{padding:10px}textarea{min-height:80px;resize:vertical}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.result{padding:12px;border-radius:10px;background:#0b111d;border:1px solid var(--line);margin-top:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.hidden{display:none!important}.pill{display:inline-block;border-radius:999px;background:#1e3a32;color:#8ff0c6;padding:5px 9px;font-size:12px}
+footer{padding:22px 4px;color:var(--muted);font-size:12px;text-align:center}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}main{padding:22px}}
+</style>
+</head>
+<body>
+<header><div class="brand">⚡ <span>BOT</span> CENTER</div><div class="status">মোবাইল ড্যাশবোর্ড · ডেমো</div></header>
+<main>
+<div class="hero">
+  <div class="pill">বাংলা ইন্টারফেস</div>
+  <h1>স্বাগতম 👋</h1>
+  <p class="muted">এক জায়গা থেকে চার্ট বিশ্লেষণ, পেমেন্ট ফর্ম, রেফারেল ও গেম মেনু ব্যবহার করুন।</p>
+  <div class="actions"><button onclick="showSection('telegram')">টেলিগ্রাম সংযোগ</button><button class="secondary" onclick="showSection('chart')">চার্ট বিশ্লেষণ</button></div>
+</div>
+<nav aria-label="প্রধান মেনু">
+<button class="secondary" onclick="showSection('home')">হোম</button>
+<button class="secondary" onclick="showSection('chart')">📈 চার্ট</button>
+<button class="secondary" onclick="showSection('payment')">💳 পেমেন্ট</button>
+<button class="secondary" onclick="showSection('referral')">👥 রেফারেল</button>
+<button class="secondary" onclick="showSection('games')">🎮 গেম</button>
+<button class="secondary" onclick="showSection('telegram')">🤖 বট সেটআপ</button>
+</nav>
+<section id="home">
+<h2>ফিচারসমূহ</h2>
+<div class="grid">
+<div class="card" onclick="showSection('chart')"><div class="emoji">📈</div><h3>ChartPilot</h3><p>চার্টের ছবি নির্বাচন করে বিশ্লেষণের অনুরোধ তৈরি করুন।</p></div>
+<div class="card" onclick="showSection('payment')"><div class="emoji">💳</div><h3>পেমেন্ট ও উইথড্র</h3><p>পেমেন্ট মাধ্যম ও অনুরোধের তথ্য জমা দেওয়ার ডেমো ফর্ম।</p></div>
+<div class="card" onclick="showSection('referral')"><div class="emoji">👥</div><h3>রেফারেল</h3><p>নিজের রেফারেল লিংক বসিয়ে কপি করুন।</p></div>
+<div class="card" onclick="showSection('games')"><div class="emoji">🎮</div><h3>গেম মেনু</h3><p>নিজস্ব গেমের লিংক যোগ করার নমুনা কার্ড।</p></div>
+<div class="card" onclick="showSection('telegram')"><div class="emoji">🤖</div><h3>Telegram API</h3><p>নিরাপদভাবে বট যুক্ত করার নির্দেশনা।</p></div>
+<div class="card"><div class="emoji">🔒</div><h3>নিরাপত্তা</h3><p>এই HTML-এ বট টোকেন বা পেমেন্ট গোপন তথ্য রাখবেন না।</p></div>
+</div>
+</section>
+<section id="chart" class="hidden">
+<h2>📈 ChartPilot — চার্ট ছবি</h2>
+<div class="panel">
+<p class="muted">একটি চার্টের স্ক্রিনশট বাছুন। এই ডেমো ছবিটি শুধু দেখায়; নিজে থেকে বাজার বিশ্লেষণ করে না।</p>
+<label for="chartImage">চার্টের ছবি</label><input id="chartImage" type="file" accept="image/*" onchange="previewImage(event)">
+<img id="preview" class="hidden" alt="নির্বাচিত চার্টের প্রিভিউ" style="width:100%;max-height:320px;object-fit:contain;margin-top:12px;border-radius:10px">
+<label for="market">বাজার / অ্যাসেট</label><input id="market" placeholder="যেমন: BTC/USDT">
+<label for="timeframe">টাইমফ্রেম</label><select id="timeframe"><option>১ মিনিট</option><option>৫ মিনিট</option><option>১৫ মিনিট</option><option>১ ঘণ্টা</option></select>
+<div class="actions"><button onclick="makeChartRequest()">বিশ্লেষণের অনুরোধ তৈরি</button></div>
+<div id="chartResult" class="result">বর্তমানে নির্বাচিত ফলাফল: নিশ্চিত নয়</div>
+<p class="muted">ছবি থেকে নির্ভরযোগ্য বিশ্লেষণের জন্য সার্ভার-সাইড AI সংযোগ লাগবে। কোনো ফলাফল নিশ্চিত নয়; শুধু এই ডেমোর ভিত্তিতে ট্রেড করবেন না।</p>
+</div>
+</section>
+<section id="payment" class="hidden">
+<h2>💳 পেমেন্ট ও উইথড্র</h2>
+<div class="panel">
+<p class="muted">এটি শুধু ফর্মের নমুনা। টাকা পাঠানো, ব্যালান্স বদলানো বা উইথড্র অনুমোদন করে না।</p>
+<label for="payType">অনুরোধের ধরন</label><select id="payType"><option>ডিপোজিট</option><option>উইথড্র</option></select>
+<label for="method">পেমেন্ট মাধ্যম</label><select id="method"><option>bKash</option><option>Rocket</option><option>Nagad</option><option>Bank transfer</option></select>
+<label for="amount">পরিমাণ (৳)</label><input id="amount" type="number" min="1" placeholder="পরিমাণ লিখুন">
+<label for="phone">মোবাইল নম্বর</label><input id="phone" inputmode="tel" placeholder="01XXXXXXXXX">
+<label for="trx">ট্রানজ্যাকশন আইডি (যদি থাকে)</label><input id="trx" placeholder="TrxID">
+<div class="actions"><button onclick="paymentPreview()">ফর্মের সারাংশ দেখুন</button></div>
+<div id="payResult" class="result">এখানে আপনার ফর্মের সারাংশ দেখাবে।</div>
+</div>
+</section>
+<section id="referral" class="hidden">
+<h2>👥 রেফারেল / ইনভাইট</h2><div class="panel">
+<p class="muted">আপনার বটের আসল রেফারেল লিংক নিচে বসান।</p>
+<label for="refLink">রেফারেল লিংক</label><input id="refLink" type="url" placeholder="https://t.me/YourBot?start=YOUR_ID">
+<div class="actions"><button onclick="copyReferral()">লিংক কপি করুন</button><button class="secondary" onclick="shareReferral()">শেয়ার করুন</button></div><div id="refResult" class="result">এখনো লিংক যোগ করা হয়নি।</div>
+</div></section>
+<section id="games" class="hidden">
+<h2>🎮 গেম মেনু</h2><div class="grid">
+<div class="card"><div class="emoji">🕹️</div><h3>গেম ১</h3><p>নিজের গেমের URL যোগ করুন।</p><label for="game1">গেমের লিংক</label><input id="game1" type="url" placeholder="https://example.com"><div class="actions"><button class="secondary" onclick="openGame('game1')">গেম খুলুন</button></div></div>
+<div class="card"><div class="emoji">🎯</div><h3>গেম ২</h3><p>নিজের গেমের URL যোগ করুন।</p><label for="game2">গেমের লিংক</label><input id="game2" type="url" placeholder="https://example.com"><div class="actions"><button class="secondary" onclick="openGame('game2')">গেম খুলুন</button></div></div>
+<div class="card"><div class="emoji">🧩</div><h3>গেম ৩</h3><p>নিজের গেমের URL যোগ করুন।</p><label for="game3">গেমের লিংক</label><input id="game3" type="url" placeholder="https://example.com"><div class="actions"><button class="secondary" onclick="openGame('game3')">গেম খুলুন</button></div></div>
+</div></section>
+<section id="telegram" class="hidden">
+<h2>🤖 Telegram বট সংযোগ</h2><div class="panel">
+<p>এই HTML ফাইলটি একটি ফ্রন্টএন্ড ডেমো। এটিকে Telegram বটের সঙ্গে যুক্ত করতে:</p>
+<ol><li>Telegram-এ <b>@BotFather</b> ব্যবহার করে বট তৈরি করুন।</li><li>টোকেনটি সার্ভারের environment variable-এ রাখুন—HTML/JavaScript-এ নয়।</li><li>Node.js বা Python ব্যাকএন্ড তৈরি করে Telegram Bot API-এর সঙ্গে যোগাযোগ করান।</li><li>চার্ট AI, পেমেন্ট যাচাই, রেফারেল গণনা ও অ্যাডমিন অনুমোদন সার্ভারে বাস্তবায়ন করুন।</li></ol>
+<label for="botUsername">বটের username (ঐচ্ছিক)</label><input id="botUsername" placeholder="YourBot ( @ ছাড়া )">
+<div class="actions"><button onclick="openTelegramBot()">টেলিগ্রাম বট খুলুন</button></div>
+<div class="result">সতর্কতা: বট টোকেন, পেমেন্ট API secret, OTP বা গোপন তথ্য এই পেজে লিখবেন না।</div>
+</div></section>
+<footer>ডেমো HTML · কোনো বাস্তব পেমেন্ট, ট্রেড বা বট API কল করা হয় না। বাস্তব ব্যবহারের আগে নিরাপদ ব্যাকএন্ড প্রয়োজন।</footer>
+</main>
+<script>
+function showSection(id){
+ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+ const target=document.getElementById(id); if(target) target.classList.remove('hidden');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function previewImage(e){
+ const f=e.target.files&&e.target.files[0],img=document.getElementById('preview');
+ if(!f){img.classList.add('hidden');return}
+ if(!f.type.startsWith('image/')){alert('একটি ছবি নির্বাচন করুন।');e.target.value='';return}
+ img.src=URL.createObjectURL(f);img.classList.remove('hidden');
+}
+function makeChartRequest(){
+ const f=document.getElementById('chartImage').files[0];
+ const market=document.getElementById('market').value.trim()||'উল্লেখ করা হয়নি';
+ const tf=document.getElementById('timeframe').value;
+ document.getElementById('chartResult').textContent=f?
+ 'অনুরোধ প্রস্তুত হয়েছে।\\nবাজার: '+market+'\\nটাইমফ্রেম: '+tf+'\\nছবি: '+f.name+'\\nফলাফল: সিগনাল নাই — এই ডেমোতে AI ব্যাকএন্ড যুক্ত নেই।':
+ 'আগে চার্টের ছবি নির্বাচন করুন।';
+}
+function paymentPreview(){
+ const type=document.getElementById('payType').value,method=document.getElementById('method').value;
+ const amount=document.getElementById('amount').value,phone=document.getElementById('phone').value.trim();
+ if(!amount||Number(amount)<=0||!phone){document.getElementById('payResult').textContent='সঠিক পরিমাণ ও মোবাইল নম্বর লিখুন।';return}
+ document.getElementById('payResult').textContent='ডেমো সারাংশ\\nধরন: '+type+'\\nমাধ্যম: '+method+'\\nপরিমাণ: ৳'+amount+'\\nনম্বর: '+phone+'\\n\\nএটি জমা বা পেমেন্ট সম্পন্ন করেনি।';
+}
+async function copyReferral(){
+ const v=document.getElementById('refLink').value.trim(),out=document.getElementById('refResult');
+ if(!v){out.textContent='আগে রেফারেল লিংক লিখুন।';return}
+ try{await navigator.clipboard.writeText(v);out.textContent='লিংক কপি হয়েছে: '+v}
+ catch(e){out.textContent='এই লিংকটি কপি করুন: '+v}
+}
+function shareReferral(){
+ const v=document.getElementById('refLink').value.trim();
+ if(!v){document.getElementById('refResult').textContent='আগে রেফারেল লিংক লিখুন।';return}
+ if(navigator.share) navigator.share({title:'আমার Telegram Bot',url:v}).catch(()=>{});
+ else copyReferral();
+}
+function openGame(id){
+ const v=document.getElementById(id).value.trim();
+ try{const u=new URL(v);if(u.protocol!=='https:'&&u.protocol!=='http:')throw 0;window.open(u.href,'_blank','noopener,noreferrer')}
+ catch(e){alert('একটি সঠিক https:// বা http:// গেমের লিংক লিখুন।')}
+}
+function openTelegramBot(){
+ let u=document.getElementById('botUsername').value.trim().replace(/^@/,'');
+ if(!/^[A-Za-z0-9_]{5,32}$/.test(u)){alert('বটের সঠিক username লিখুন।');return}
+ window.open('https://t.me/'+u,'_blank','noopener,noreferrer');
+}
+</script>
+</body></html>

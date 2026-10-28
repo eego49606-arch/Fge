@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d18">
+<title>ChartPilot</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px 14px;background:#080d18;color:#fff;font-family:Arial,sans-serif}
+.container{max-width:480px;margin:auto}
+header{text-align:center;padding:18px 10px}
+header h1{color:#f3c969;margin-bottom:6px;font-size:30px}
+header p{color:#aab6ca;font-size:13px}
+.card{background:#111a2a;border:1px solid #29364b;border-radius:16px;padding:18px;margin:15px 0}
+h3{margin-top:0;font-size:17px}
+.info{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:#f3c969;font-size:13px}
+input[type=file]{width:100%;padding:12px;border:1px dashed #596981;border-radius:10px;color:white;background:#080d18}
+#preview{display:none;width:100%;max-height:350px;object-fit:contain;margin-top:15px;border-radius:10px;background:#080d18}
+button{width:100%;padding:14px;border:none;border-radius:10px;margin-top:12px;font-size:15px;font-weight:bold;cursor:pointer}
+.primary{background:#f3c969;color:#101522}
+.secondary{background:#26344a;color:white}
+.stop{background:#6b2630;color:white}
+.result{text-align:center;background:#080d18;padding:22px 12px;border-radius:12px}
+#signal{font-size:27px;font-weight:bold;color:#f3c969;margin:12px 0}
+#message{color:#aab6ca;font-size:13px;line-height:1.6}
+.note{color:#9eacc3;font-size:12px;line-height:1.6}
+#screenPreview{display:none;width:100%;max-height:350px;object-fit:contain;margin-top:14px;border-radius:10px;background:#080d18;border:1px solid #29364b}
+.status{font-size:13px;color:#aab6ca;margin-top:10px;line-height:1.5}
+footer{text-align:center;color:#75839b;font-size:11px;padding:15px 0}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>ChartPilot</h1>
+<p>Forex Chart Screenshot & Screen Share Demo</p>
+</header>
+
+<div class="card">
+<h3>চার্ট সেটিংস</h3>
+<div class="info"><span>মার্কেট: Forex</span><span>টাইমফ্রেম: ১ মিনিট</span></div>
+</div>
+
+<div class="card">
+<h3>চার্টের স্ক্রিনশট</h3>
+<label for="chartFile">Choose File</label><br><br>
+<input type="file" id="chartFile" accept="image/*">
+<img id="preview" alt="চার্টের প্রিভিউ">
+<p id="fileInfo" class="note">চার্টের ছবি নির্বাচন করো।</p>
+<button class="primary" id="analyzeBtn">চার্ট যাচাই করো</button>
+<button class="secondary" id="clearBtn">ছবি সরাও</button>
+</div>
+
+<div class="card">
+<h3>লাইভ স্ক্রিন শেয়ার</h3>
+<p class="note">শুরু চাপলে ব্রাউজারের অনুমতি উইন্ডো আসবে। নিজে যে স্ক্রিন/উইন্ডো শেয়ার করতে চাও সেটি নির্বাচন করো। শেয়ার যেকোনো সময় বন্ধ করতে পারবে।</p>
+<button class="primary" id="startShare">স্ক্রিন শেয়ার শুরু করো</button>
+<button class="stop" id="stopShare" disabled>স্ক্রিন শেয়ার বন্ধ করো</button>
+<video id="screenPreview" autoplay muted playsinline></video>
+<div id="shareStatus" class="status" aria-live="polite">স্ক্রিন শেয়ার বন্ধ আছে।</div>
+</div>
+
+<div class="card">
+<h3>বিশ্লেষণের ফলাফল</h3>
+<div class="result">
+<div>বর্তমান ফলাফল</div>
+<div id="signal">সিগনাল নাই</div>
+<div id="message">বিশ্লেষণের জন্য চার্টের ছবি নির্বাচন করো অথবা স্ক্রিন শেয়ার শুরু করো।</div>
+</div>
+<p class="note">এই ডেমো ছবি দেখায় এবং স্ক্রিন শেয়ারের প্রিভিউ দেয়। এটি নিজে থেকে বাজারের ডেটা বা AI বিশ্লেষণ চালায় না। প্রকৃত বিশ্লেষণ সংযুক্ত না থাকলে ফলাফল “সিগনাল নাই” থাকবে। কোনো স্বয়ংক্রিয় ট্রেডিং নেই।</p>
+</div>
+<footer>ChartPilot Demo • ব্যবহারকারীর অনুমতি ছাড়া স্ক্রিন শেয়ার শুরু হয় না</footer>
+</div>
+
+<script>
+const fileInput=document.getElementById("chartFile");
+const preview=document.getElementById("preview");
+const fileInfo=document.getElementById("fileInfo");
+const signal=document.getElementById("signal");
+const message=document.getElementById("message");
+const startShare=document.getElementById("startShare");
+const stopShare=document.getElementById("stopShare");
+const screenPreview=document.getElementById("screenPreview");
+const shareStatus=document.getElementById("shareStatus");
+let imageUrl=null;
+let screenStream=null;
+
+function showNoSignal(text){
+  signal.textContent="সিগনাল নাই";
+  message.textContent=text;
+}
+
+fileInput.addEventListener("change",function(){
+  const file=this.files[0];
+  if(imageUrl){URL.revokeObjectURL(imageUrl);imageUrl=null;}
+  if(!file){
+    preview.style.display="none";
+    showNoSignal("কোনো ছবি নির্বাচন করা হয়নি।");
+    return;
+  }
+  if(!file.type.startsWith("image/")){
+    this.value="";
+    preview.style.display="none";
+    showNoSignal("একটি বৈধ ছবির ফাইল নির্বাচন করো।");
+    return;
+  }
+  imageUrl=URL.createObjectURL(file);
+  preview.src=imageUrl;
+  preview.style.display="block";
+  fileInfo.textContent=file.name+" ("+(file.size/1024).toFixed(0)+" KB)";
+  showNoSignal("ছবি লোড হয়েছে। AI বিশ্লেষণ এখনো সংযুক্ত নেই।");
+});
+
+document.getElementById("analyzeBtn").addEventListener("click",function(){
+  if(!fileInput.files[0]){
+    showNoSignal("আগে Choose File চাপ দিয়ে চার্টের ছবি নির্বাচন করো।");
+    return;
+  }
+  showNoSignal("প্রকৃত AI বিশ্লেষণ সংযুক্ত নেই। তাই নির্ভরযোগ্য ফলাফল দেওয়া সম্ভব নয়।");
+});
+
+document.getElementById("clearBtn").addEventListener("click",function(){
+  fileInput.value="";
+  if(imageUrl){URL.revokeObjectURL(imageUrl);imageUrl=null;}
+  preview.removeAttribute("src");
+  preview.style.display="none";
+  fileInfo.textContent="চার্টের ছবি নির্বাচন করো।";
+  showNoSignal("ছবি সরানো হয়েছে।");
+});
+
+function stopScreenShare(messageText){
+  if(screenStream){
+    screenStream.getTracks().forEach(track=>track.stop());
+    screenStream=null;
+  }
+  screenPreview.pause();
+  screenPreview.srcObject=null;
+  screenPreview.style.display="none";
+  startShare.disabled=false;
+  stopShare.disabled=true;
+  shareStatus.textContent=messageText || "স্ক্রিন শেয়ার বন্ধ আছে।";
+}
+
+startShare.addEventListener("click",async function(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia){
+    shareStatus.textContent="এই ব্রাউজার/পরিবেশে স্ক্রিন শেয়ার সমর্থিত নয়। HTTPS-এ আপডেটেড ব্রাউজার ব্যবহার করো।";
+    return;
+  }
+  try{
+    screenStream=await navigator.mediaDevices.getDisplayMedia({
+      video:true,
+      audio:false
+    });
+    screenPreview.srcObject=screenStream;
+    screenPreview.style.display="block";
+    startShare.disabled=true;
+    stopShare.disabled=false;
+    shareStatus.textContent="স্ক্রিন শেয়ার চলছে। প্রিভিউ দেখা যাচ্ছে; AI বিশ্লেষণ সংযুক্ত নয়।";
+    showNoSignal("স্ক্রিন শেয়ার চলছে, কিন্তু প্রকৃত AI বিশ্লেষণ সংযুক্ত নেই।");
+    const videoTrack=screenStream.getVideoTracks()[0];
+    if(videoTrack){
+      videoTrack.addEventListener("ended",()=>{
+        stopScreenShare("ব্রাউজার থেকে স্ক্রিন শেয়ার বন্ধ করা হয়েছে।");
+        showNoSignal("স্ক্রিন শেয়ার বন্ধ।");
+      },{once:true});
+    }
+  }catch(error){
+    stopScreenShare("স্ক্রিন শেয়ার শুরু হয়নি। অনুমতি বাতিল করা হয়ে থাকতে পারে।");
+    showNoSignal("স্ক্রিন শেয়ার অনুমতি দেওয়া হয়নি বা চালু করা যায়নি।");
+  }
+});
+
+stopShare.addEventListener("click",function(){
+  stopScreenShare("তুমি স্ক্রিন শেয়ার বন্ধ করেছ।");
+  showNoSignal("স্ক্রিন শেয়ার বন্ধ।");
+});
+window.addEventListener("beforeunload",()=>{
+  if(screenStream) screenStream.getTracks().forEach(track=>track.stop());
+});
+</script>
+</body>
+</html>
